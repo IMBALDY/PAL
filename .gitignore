@@ -1,0 +1,36 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+*.swp
+*.swo
+*.tmp
+.venv/
+
+# Experiment outputs
+checkpoints/
+log/
+runs/
+results/
+wandb/
+
+# Local datasets and archives
+datasets/*
+!datasets/README.md
+dataset.tgz
+
+# LaTeX / presentation build artifacts
+presentation/*.aux
+presentation/*.fdb_latexmk
+presentation/*.fls
+presentation/*.log
+presentation/*.nav
+presentation/*.out
+presentation/*.pdf
+presentation/*.snm
+presentation/*.toc
+presentation/speaker_notes_*.md
+presentation/speaker_notes_*.pdf
+
+# Keep presentation sources
+!presentation/*.tex
+!presentation/README.md

@@ -1,0 +1,7 @@
+numpy>=1.21
+scipy>=1.7
+pyyaml>=6.0
+tqdm>=4.64
+torch>=1.12
+tensorboard>=2.10
+wandb>=0.16

@@ -1,0 +1,142 @@
+<svg width="1400" height="980" viewBox="0 0 1400 980" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #f7f4ea; }
+      .title { font: 700 28px Arial, sans-serif; fill: #182028; }
+      .label { font: 600 17px Arial, sans-serif; fill: #182028; }
+      .small { font: 500 14px Arial, sans-serif; fill: #334155; }
+      .tiny { font: 500 13px Arial, sans-serif; fill: #475569; }
+      .box { rx: 18; ry: 18; stroke-width: 2.5; }
+      .input { fill: #fff7d6; stroke: #c79a00; }
+      .view { fill: #e6f1ff; stroke: #2f6db3; }
+      .innov { fill: #eaf9ef; stroke: #2e8b57; }
+      .score { fill: #fff0e6; stroke: #d46a1f; }
+      .loss { fill: #f5eaff; stroke: #7a4db3; }
+      .out { fill: #fce7ef; stroke: #c43d6b; }
+      .line { stroke: #51606f; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke-dasharray: 8 6; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#51606f"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="980"/>
+  <text class="title" x="700" y="48" text-anchor="middle">PAL Latest Architecture</text>
+
+  <rect class="box input" x="60" y="90" width="220" height="130"/>
+  <text class="label" x="170" y="128" text-anchor="middle">Input Graphs</text>
+  <text class="small" x="170" y="160" text-anchor="middle">user-bundle graph</text>
+  <text class="small" x="170" y="186" text-anchor="middle">user-item graph</text>
+  <text class="small" x="170" y="212" text-anchor="middle">bundle-item graph</text>
+
+  <rect class="box view" x="360" y="90" width="240" height="80"/>
+  <text class="label" x="480" y="122" text-anchor="middle">Item-view</text>
+  <text class="small" x="480" y="150" text-anchor="middle">graph propagation</text>
+
+  <rect class="box view" x="360" y="210" width="240" height="80"/>
+  <text class="label" x="480" y="242" text-anchor="middle">Bundle-view</text>
+  <text class="small" x="480" y="270" text-anchor="middle">graph propagation</text>
+
+  <rect class="box view" x="680" y="70" width="220" height="70"/>
+  <text class="label" x="790" y="110" text-anchor="middle">User Embedding h_u^I</text>
+
+  <rect class="box view" x="680" y="160" width="220" height="70"/>
+  <text class="label" x="790" y="200" text-anchor="middle">Item Embedding h_i</text>
+
+  <rect class="box view" x="680" y="250" width="220" height="70"/>
+  <text class="label" x="790" y="290" text-anchor="middle">User Embedding h_u^B</text>
+
+  <rect class="box view" x="680" y="340" width="220" height="70"/>
+  <text class="label" x="790" y="380" text-anchor="middle">Bundle Embedding h_b^B</text>
+
+  <rect class="box innov" x="980" y="120" width="290" height="110"/>
+  <text class="label" x="1125" y="156" text-anchor="middle">Innovation 1</text>
+  <text class="label" x="1125" y="184" text-anchor="middle">User-aware Item Attention</text>
+  <text class="tiny" x="1125" y="212" text-anchor="middle">bundle items are weighted differently</text>
+
+  <rect class="box innov" x="980" y="270" width="290" height="90"/>
+  <text class="label" x="1125" y="304" text-anchor="middle">Personalized Item-view Bundle</text>
+  <text class="label" x="1125" y="332" text-anchor="middle">Embedding h_b^(I,u)</text>
+
+  <rect class="box score" x="1020" y="420" width="220" height="78"/>
+  <text class="label" x="1130" y="454" text-anchor="middle">Item-view Score</text>
+  <text class="small" x="1130" y="482" text-anchor="middle">score_I(u, b)</text>
+
+  <rect class="box score" x="760" y="420" width="220" height="78"/>
+  <text class="label" x="870" y="454" text-anchor="middle">Bundle-view Score</text>
+  <text class="small" x="870" y="482" text-anchor="middle">score_B(u, b)</text>
+
+  <rect class="box innov" x="450" y="430" width="250" height="95"/>
+  <text class="label" x="575" y="464" text-anchor="middle">Innovation 2</text>
+  <text class="label" x="575" y="492" text-anchor="middle">Adaptive Cross-view Fusion</text>
+
+  <rect class="box innov" x="450" y="555" width="250" height="80"/>
+  <text class="label" x="575" y="588" text-anchor="middle">Fusion Gate beta(u)</text>
+  <text class="small" x="575" y="616" text-anchor="middle">learned from h_u^I and h_u^B</text>
+
+  <rect class="box score" x="760" y="560" width="480" height="100"/>
+  <text class="label" x="1000" y="596" text-anchor="middle">Final Ranking Score</text>
+  <text class="small" x="1000" y="626" text-anchor="middle">beta(u) * score_I(u,b) + (1 - beta(u)) * score_B(u,b)</text>
+
+  <rect class="box loss" x="260" y="720" width="220" height="82"/>
+  <text class="label" x="370" y="755" text-anchor="middle">User-level Contrastive</text>
+  <text class="small" x="370" y="784" text-anchor="middle">align h_u^I and h_u^B</text>
+
+  <rect class="box loss" x="530" y="720" width="240" height="82"/>
+  <text class="label" x="650" y="755" text-anchor="middle">Bundle-level Contrastive</text>
+  <text class="small" x="650" y="784" text-anchor="middle">align h_b^(I,u) and h_b^B</text>
+
+  <rect class="box loss" x="830" y="720" width="180" height="82"/>
+  <text class="label" x="920" y="755" text-anchor="middle">BPR Loss</text>
+  <text class="small" x="920" y="784" text-anchor="middle">ranking objective</text>
+
+  <rect class="box loss" x="1080" y="710" width="220" height="102"/>
+  <text class="label" x="1190" y="748" text-anchor="middle">Total Loss</text>
+  <text class="small" x="1190" y="778" text-anchor="middle">L = L_bpr + λ L_cl</text>
+
+  <rect class="box out" x="770" y="860" width="230" height="80"/>
+  <text class="label" x="885" y="894" text-anchor="middle">Top-N Recommendation</text>
+  <text class="small" x="885" y="922" text-anchor="middle">final ranked bundles</text>
+
+  <rect class="box out" x="1040" y="850" width="280" height="95"/>
+  <text class="label" x="1180" y="885" text-anchor="middle">Explanation Output</text>
+  <text class="small" x="1180" y="913" text-anchor="middle">top attention items + fusion weight</text>
+
+  <path class="line" d="M280 155 L360 130"/>
+  <path class="line" d="M280 155 L360 250"/>
+
+  <path class="line" d="M600 130 L680 105"/>
+  <path class="line" d="M600 130 L680 195"/>
+  <path class="line" d="M600 250 L680 285"/>
+  <path class="line" d="M600 250 L680 375"/>
+
+  <path class="line" d="M900 105 L980 155"/>
+  <path class="line" d="M900 195 L980 175"/>
+  <path class="line" d="M1125 230 L1125 270"/>
+
+  <path class="line" d="M900 285 L980 450"/>
+  <path class="line" d="M1270 315 L1130 420"/>
+  <path class="line" d="M790 140 L575 430"/>
+  <path class="line" d="M790 285 L575 430"/>
+  <path class="line" d="M575 525 L575 555"/>
+
+  <path class="line" d="M980 459 L760 595"/>
+  <path class="line" d="M1240 459 L1240 595 L1240 610"/>
+  <path class="line" d="M700 595 L760 610"/>
+
+  <path class="line" d="M790 105 L370 720"/>
+  <path class="line" d="M790 285 L480 720"/>
+  <path class="line" d="M1125 315 L650 720"/>
+  <path class="line" d="M900 375 L770 720"/>
+  <path class="line" d="M1000 660 L920 720"/>
+
+  <path class="line" d="M480 761 L1080 761"/>
+  <path class="line" d="M770 761 L1080 761"/>
+  <path class="line" d="M1010 761 L1080 761"/>
+
+  <path class="line" d="M885 660 L885 860"/>
+  <path class="line" d="M1125 175 L1180 850"/>
+  <path class="line dashed" d="M575 635 L1180 850"/>
+  <path class="line" d="M1000 660 L1180 850"/>
+</svg>
