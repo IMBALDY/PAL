@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
 import random
@@ -169,21 +170,42 @@ def load_users(
 
 
 def write_pairs(path: Path, pairs: list[tuple[int, int]]) -> None:
-    with path.open("w", encoding="utf-8") as f:
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["left_idx", "right_idx"])
         for left, right in sorted(pairs):
-            f.write(f"{left}\t{right}\n")
+            writer.writerow([left, right])
 
 
 def write_affinity_records(path: Path, records: list[dict]) -> None:
-    with path.open("w", encoding="utf-8") as f:
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["user_idx", "bundle_idx", "overlap_count", "affinity"])
+        writer.writeheader()
         for record in records:
-            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+            writer.writerow(record)
 
 
 def write_user_item_weights(path: Path, rows: list[tuple[int, int, float, int]]) -> None:
-    with path.open("w", encoding="utf-8") as f:
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["user_idx", "item_idx", "weight", "raw_playtime"])
         for user_idx, item_idx, weight, raw_playtime in sorted(rows):
-            f.write(f"{user_idx}\t{item_idx}\t{weight:.8f}\t{raw_playtime}\n")
+            writer.writerow([user_idx, item_idx, f"{weight:.8f}", raw_playtime])
+
+
+def write_data_size(path: Path, num_users: int, num_bundles: int, num_items: int) -> None:
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["num_users", "num_bundles", "num_items"])
+        writer.writerow([num_users, num_bundles, num_items])
+
+
+def write_id_map(path: Path, id_map: dict[str, int]) -> None:
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["original_id", "inner_id"])
+        for original_id, inner_id in sorted(id_map.items(), key=lambda item: item[1]):
+            writer.writerow([original_id, inner_id])
 
 
 def main() -> None:
@@ -255,22 +277,18 @@ def main() -> None:
             )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    write_pairs(args.output_dir / "bundle_item.txt", bundle_item_pairs)
-    write_pairs(args.output_dir / "user_item.txt", user_item_pairs)
-    write_user_item_weights(args.output_dir / "user_item_weight.txt", user_item_weight_rows)
-    write_pairs(args.output_dir / "user_bundle_train.txt", user_bundle_train)
-    write_pairs(args.output_dir / "user_bundle_tune.txt", user_bundle_tune)
-    write_pairs(args.output_dir / "user_bundle_test.txt", user_bundle_test)
-    write_affinity_records(args.output_dir / "user_bundle_affinity.jsonl", affinity_records)
+    write_pairs(args.output_dir / "bundle_item.csv", bundle_item_pairs)
+    write_pairs(args.output_dir / "user_item.csv", user_item_pairs)
+    write_user_item_weights(args.output_dir / "user_item_weight.csv", user_item_weight_rows)
+    write_pairs(args.output_dir / "user_bundle_train.csv", user_bundle_train)
+    write_pairs(args.output_dir / "user_bundle_tune.csv", user_bundle_tune)
+    write_pairs(args.output_dir / "user_bundle_test.csv", user_bundle_test)
+    write_affinity_records(args.output_dir / "user_bundle_affinity.csv", affinity_records)
 
-    with (args.output_dir / f"{args.dataset_name}_data_size.txt").open("w", encoding="utf-8") as f:
-        f.write(f"{len(users)}\t{len(bundles)}\t{len(item_ids)}\n")
-    with (args.output_dir / "user_id_map.json").open("w", encoding="utf-8") as f:
-        json.dump(user_map, f, ensure_ascii=False, indent=2)
-    with (args.output_dir / "bundle_id_map.json").open("w", encoding="utf-8") as f:
-        json.dump(bundle_map, f, ensure_ascii=False, indent=2)
-    with (args.output_dir / "item_id_map.json").open("w", encoding="utf-8") as f:
-        json.dump(item_map, f, ensure_ascii=False, indent=2)
+    write_data_size(args.output_dir / f"{args.dataset_name}_data_size.csv", len(users), len(bundles), len(item_ids))
+    write_id_map(args.output_dir / "user_id_map.csv", user_map)
+    write_id_map(args.output_dir / "bundle_id_map.csv", bundle_map)
+    write_id_map(args.output_dir / "item_id_map.csv", item_map)
 
     print(
         "Generated {name}: users={users}, bundles={bundles}, items={items}, "

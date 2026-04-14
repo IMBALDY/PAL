@@ -30,7 +30,7 @@ RESULT_COLUMNS = ["timestamp", "experiment_name", "dataset", "model", "epoch", "
 def get_cmd():
     parser = argparse.ArgumentParser()
     parser.add_argument("-g", "--gpu", default="0", type=str, help="which gpu to use")
-    parser.add_argument("-d", "--dataset", default="SteamDebug", type=str, help="which dataset to use, options: SteamDebug, NetEase, Youshu, iFashion")
+    parser.add_argument("-d", "--dataset", default="Steam", type=str, help="which dataset to use, options: Steam, SteamAffinity, NetEase, Youshu, iFashion")
     parser.add_argument("-m", "--model", default=MODEL_NAME, type=str, help="which model to use, options: PAL")
     parser.add_argument("-i", "--info", default="", type=str, help="auxiliary info appended to the log file name")
     parser.add_argument("--attention-type", default=None, choices=["global", "user", "none"], help="override item attention mode")

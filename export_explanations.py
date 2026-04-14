@@ -28,9 +28,11 @@ def parse_args():
 def load_inverse_map(path):
     if not path.exists():
         return {}
-    with path.open(encoding="utf-8") as f:
-        raw = json.load(f)
-    return {int(inner_id): str(original_id) for original_id, inner_id in raw.items()}
+    if path.suffix == ".csv":
+        with path.open("r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            return {int(row["inner_id"]): str(row["original_id"]) for row in reader}
+    raise ValueError(f"Unsupported map file format: {path}")
 
 
 def format_ids(ids, inverse_map):
@@ -104,10 +106,10 @@ def main():
     output_path = resolve_output_path(args)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    dataset_dir = Path(conf["data_path"]) / conf["dataset"]
-    user_map = load_inverse_map(dataset_dir / "user_id_map.json")
-    bundle_map = load_inverse_map(dataset_dir / "bundle_id_map.json")
-    item_map = load_inverse_map(dataset_dir / "item_id_map.json")
+    dataset_dir = Path(dataset.path) / conf["dataset"]
+    user_map = load_inverse_map(dataset_dir / "user_id_map.csv")
+    bundle_map = load_inverse_map(dataset_dir / "bundle_id_map.csv")
+    item_map = load_inverse_map(dataset_dir / "item_id_map.csv")
 
     dataloader = dataset.test_loader if args.split == "test" else dataset.val_loader
 

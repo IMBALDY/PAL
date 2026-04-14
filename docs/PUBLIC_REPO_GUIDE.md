@@ -14,14 +14,13 @@ This file defines what should be included in a public `PAL` repository and what 
 - `models/`
 - `scripts/`
 - `docs/`
+- `datasets/`
 - `presentation/main.tex`
 - `presentation/README.md`
 - `.gitignore`
 
 ## Do Not Upload
 
-- `datasets/`
-  Dataset files may be large, derived, or subject to separate licensing constraints.
 - `dataset.tgz`
   Local archive only.
 - `checkpoints/`
@@ -51,8 +50,9 @@ This file defines what should be included in a public `PAL` repository and what 
 ## Recommended Public Repo Shape
 
 ```text
-PAL/
+repo-root/
   docs/
+  datasets/
   models/
   presentation/
     README.md
@@ -72,4 +72,4 @@ PAL/
 
 When creating the public repo, copy only the files and folders listed in `Safe To Upload`.
 
-Do not initialize the public repository by copying the whole current `PAL/` directory first and deleting afterward. That is the easiest way to leak private files by mistake.
+Do not initialize the public repository by copying the whole current working directory first and deleting afterward. That is the easiest way to leak private files by mistake.

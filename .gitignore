@@ -13,9 +13,7 @@ runs/
 results/
 wandb/
 
-# Local datasets and archives
-datasets/*
-!datasets/README.md
+# Local archives
 dataset.tgz
 
 # LaTeX / presentation build artifacts

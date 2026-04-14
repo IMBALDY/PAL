@@ -5,7 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONDA_ENV="crosscbr"
 GPU_ID="${GPU_ID:-0}"
-DATASET="${DATASET:-SteamDebug}"
+DATASET="${DATASET:-Steam}"
 WANDB_PROJECT="${WANDB_PROJECT:-BT4222-PAL}"
 WANDB_ENTITY="${WANDB_ENTITY:-}"
 

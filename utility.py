@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import csv
 import os
 import random
 import numpy as np
@@ -78,8 +79,9 @@ class BundleTestDataset(Dataset):
 
 class Datasets():
     def __init__(self, conf):
-        self.path = conf['data_path']
+        self.path = self.resolve_data_root(conf['data_path'])
         self.name = conf['dataset']
+        self.dataset_dir = os.path.join(self.path, self.name)
         batch_size_train = conf['batch_size_train']
         batch_size_test = conf['batch_size_test']
 
@@ -106,13 +108,50 @@ class Datasets():
         self.val_loader = DataLoader(self.bundle_val_data, batch_size=batch_size_test, shuffle=False, num_workers=num_workers_test)
         self.test_loader = DataLoader(self.bundle_test_data, batch_size=batch_size_test, shuffle=False, num_workers=num_workers_test)
 
+    def resolve_data_root(self, configured_path):
+        if os.path.isabs(configured_path):
+            return configured_path
+
+        if os.path.exists(configured_path):
+            return configured_path
+
+        repo_relative = os.path.join(os.path.dirname(os.path.abspath(__file__)), configured_path)
+        if os.path.exists(repo_relative):
+            return repo_relative
+
+        return configured_path
+
+    def resolve_data_file(self, csv_name):
+        csv_path = os.path.join(self.dataset_dir, csv_name)
+        if os.path.exists(csv_path):
+            return csv_path
+        raise FileNotFoundError(f"Missing dataset file: {csv_path}")
+
+    def load_pair_rows(self, csv_name):
+        path = self.resolve_data_file(csv_name)
+        with open(path, "r", encoding="utf-8", newline="") as f:
+            reader = csv.reader(f)
+            header = next(reader, None)
+            if header is None:
+                return []
+            rows = []
+            for row in reader:
+                if not row:
+                    continue
+                rows.append((int(row[0]), int(row[1])))
+            return rows
 
     def get_data_size(self):
         name = self.name
         if "_" in name:
             name = name.split("_")[0]
-        with open(os.path.join(self.path, self.name, '{}_data_size.txt'.format(name)), 'r') as f:
-            return [int(s) for s in f.readline().split('\t')][:3]
+        path = self.resolve_data_file(f"{name}_data_size.csv")
+        with open(path, "r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            row = next(reader, None)
+            if row is None:
+                raise ValueError(f"Dataset size file is empty: {path}")
+            return [int(row["num_users"]), int(row["num_bundles"]), int(row["num_items"])]
 
 
     def get_aux_graph(self, u_i_graph, b_i_graph, conf):
@@ -130,8 +169,7 @@ class Datasets():
 
 
     def get_bi(self):
-        with open(os.path.join(self.path, self.name, 'bundle_item.txt'), 'r') as f:
-            b_i_pairs = list(map(lambda s: tuple(int(i) for i in s[:-1].split('\t')), f.readlines()))
+        b_i_pairs = self.load_pair_rows("bundle_item.csv")
 
         indice = np.array(b_i_pairs, dtype=np.int32)
         values = np.ones(len(b_i_pairs), dtype=np.float32)
@@ -144,8 +182,7 @@ class Datasets():
 
 
     def get_ui(self):
-        with open(os.path.join(self.path, self.name, 'user_item.txt'), 'r') as f:
-            u_i_pairs = list(map(lambda s: tuple(int(i) for i in s[:-1].split('\t')), f.readlines()))
+        u_i_pairs = self.load_pair_rows("user_item.csv")
 
         indice = np.array(u_i_pairs, dtype=np.int32)
         values = np.ones(len(u_i_pairs), dtype=np.float32)
@@ -158,8 +195,7 @@ class Datasets():
 
 
     def get_ub(self, task):
-        with open(os.path.join(self.path, self.name, 'user_bundle_{}.txt'.format(task)), 'r') as f:
-            u_b_pairs = list(map(lambda s: tuple(int(i) for i in s[:-1].split('\t')), f.readlines()))
+        u_b_pairs = self.load_pair_rows(f"user_bundle_{task}.csv")
 
         indice = np.array(u_b_pairs, dtype=np.int32)
         values = np.ones(len(u_b_pairs), dtype=np.float32)

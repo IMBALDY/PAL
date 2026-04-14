@@ -76,7 +76,7 @@ iFashion:
   test_interval: 5 
 
 
-SteamDebug:
+Steam:
   data_path: './datasets'
   batch_size_train: 64
   batch_size_test: 128
